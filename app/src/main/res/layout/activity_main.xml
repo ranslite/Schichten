@@ -102,6 +102,14 @@
                 android:layout_margin="2dp"
                 android:text="Eystrup"
                 android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/rbDoerverden"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="Dörverden"
+                android:textSize="20sp" />
         </RadioGroup>
     </LinearLayout>
 

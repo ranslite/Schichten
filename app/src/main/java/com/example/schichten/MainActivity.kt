@@ -1,12 +1,12 @@
 package com.example.schichten
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.widget.CalendarView
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,16 +22,25 @@ class MainActivity : AppCompatActivity() {
         val lokal = Locale.getDefault()
         val sdfJahr = SimpleDateFormat("yyyy", lokal)
         val sdfMonat = SimpleDateFormat("MM", lokal)
-        val sdfTag =SimpleDateFormat("dd", lokal)
+        val sdfTag = SimpleDateFormat("dd", lokal)
+
 
         val cvKalender = findViewById<CalendarView>(R.id.cvKalender)
         var jahr:Int = sdfJahr.format(datum).toInt()
         var monat:Int = sdfMonat.format(datum).toInt()
         var tag:Int = sdfTag.format(datum).toInt()
-        cvKalender?.setOnDateChangeListener { view, year, month, dayOfMonth ->
+        var wochenTag:Int = kal[Calendar.DAY_OF_WEEK]
+
+        cvKalender?.setOnDateChangeListener { view, year, month, dayOfMonth  ->
             jahr = year
             monat = month
             tag = dayOfMonth
+            //Wochentag ermitteln für Heinrich Flato Schichten
+            val calendar = Calendar.getInstance()
+            calendar[year, month] = dayOfMonth
+            //Mo=2,Di=3..Sa=7,So=1 O.o
+            wochenTag = calendar[Calendar.DAY_OF_WEEK]
+
         }
 
         buEintragen.setOnClickListener {
@@ -50,74 +59,220 @@ class MainActivity : AppCompatActivity() {
             //Termintitel an das Intent übergeben
             ev.putExtra(CalendarContract.Events.TITLE, titel)
 
-            //Schichtbegin und -ende anhand der ausgewählten Schicht ermitteln
-            when(rbSchicht.text as String) {
-                "Früh" -> {
-                    //Beginn der Frühschicht
-                    kal.set(jahr, monat, tag, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+            //Dörverden extra für andere Zeiten
+            if (rbStellwerk.text as String == "Dörverden"){
+                when(rbSchicht.text as String) {
+                    "Früh" -> {
+                        //Beginn der Frühschicht
+                        //Montag Frühschicht eine Stunde später
+                        if (wochenTag == 2) {
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
 
-                    //Ende der Frühschicht
-                    kal.set(jahr, monat, tag, 12, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+                            //Ende der Frühschicht
+                            kal.set(jahr, monat, tag, 11, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
 
-                    //Kalenderintent ausführen und Daten an den Systemkalender übergeben
-                    startActivity(ev)
+                            //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                            startActivity(ev)
+                        }
+                        else {
+                            kal.set(jahr, monat, tag, 5, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            //Ende der Frühschicht
+                            kal.set(jahr, monat, tag, 11, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                            startActivity(ev)
+                        }
+                    }
+
+                    "Spät" -> {
+                        kal.set(jahr, monat, tag, 11, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag, 19, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Nacht" -> {
+
+                        kal.set(jahr, monat, tag, 19, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag+1, 5, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Früh/Nacht" -> {
+
+                        kal.set(jahr, monat, tag, 5, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag+1, 5, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Langer Tag" -> {
+                        kal.set(jahr, monat, tag, 5, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag, 17, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Lange Nacht" -> {
+                        kal.set(jahr, monat, tag, 17, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag+1, 5, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
                 }
+            }
+            else {
 
-                "Spät" -> {
-                    kal.set(jahr, monat, tag, 12, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+                //Schichtbegin und -ende anhand der ausgewählten Schicht ermitteln
+                when (rbSchicht.text as String) {
+                    "Früh" -> {
 
-                    kal.set(jahr, monat, tag, 20, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+                        //Heinrich Flato Schicht für Linsburg
+                        if (wochenTag == 2 && rbStellwerk.text as String == "Linsburg"){
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
 
-                    startActivity(ev)
+                            //Ende der Frühschicht
+                            kal.set(jahr, monat, tag, 14, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                            startActivity(ev)
+                        }
+                        else
+                            //Heinrich Flato Schicht für Rohrsen
+                            if (wochenTag == 5 && rbStellwerk.text as String == "Rohrsen"){
+                                kal.set(jahr, monat, tag, 6, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                //Ende der Frühschicht
+                                kal.set(jahr, monat, tag, 14, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                                startActivity(ev)
+                            }
+                            else {
+                                //Beginn der Frühschicht
+                                kal.set(jahr, monat, tag, 6, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                //Ende der Frühschicht
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                                startActivity(ev)
+                            }
+                    }
+
+                    "Spät" -> {
+                        if (wochenTag == 2 && rbStellwerk.text as String == "Linsburg"){
+                            kal.set(jahr, monat, tag, 14, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            //Ende der Frühschicht
+                            kal.set(jahr, monat, tag, 20, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                            startActivity(ev)
+                        }
+                        else
+                        //Heinrich Flato Schicht für Rohrsen
+                            if (wochenTag == 5 && rbStellwerk.text as String == "Rohrsen"){
+                                kal.set(jahr, monat, tag, 14, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                //Ende der Frühschicht
+                                kal.set(jahr, monat, tag, 20, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                                startActivity(ev)
+                            }
+                            else {
+                                //Beginn der Frühschicht
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                //Ende der Frühschicht
+                                kal.set(jahr, monat, tag, 20, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                //Kalenderintent ausführen und Daten an den Systemkalender übergeben
+                                startActivity(ev)
+                            }
+
+                    }
+
+                    "Nacht" -> {
+
+                        kal.set(jahr, monat, tag, 20, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag + 1, 6, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Früh/Nacht" -> {
+
+                        kal.set(jahr, monat, tag, 6, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag + 1, 6, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Langer Tag" -> {
+                        kal.set(jahr, monat, tag, 6, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag, 18, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    "Lange Nacht" -> {
+                        kal.set(jahr, monat, tag, 18, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                        kal.set(jahr, monat, tag + 1, 6, 30)
+                        ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                        startActivity(ev)
+                    }
+
+                    else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
                 }
-
-                "Nacht" -> {
-
-                    kal.set(jahr, monat, tag, 20, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
-
-                    kal.set(jahr, monat, tag+1, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
-
-                    startActivity(ev)
-                }
-
-                "Früh/Nacht" -> {
-
-                    kal.set(jahr, monat, tag, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
-
-                    kal.set(jahr, monat, tag+1, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
-
-                    startActivity(ev)
-                }
-
-                "Langer Tag" -> {
-                    kal.set(jahr, monat, tag, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
-
-                    kal.set(jahr, monat, tag, 18, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
-
-                    startActivity(ev)
-                }
-
-                "Lange Nacht" -> {
-                    kal.set(jahr, monat, tag, 18, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
-
-                    kal.set(jahr, monat, tag+1, 6, 30)
-                    ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
-
-                    startActivity(ev)
-                }
-
-                else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
             }
         }
     }
