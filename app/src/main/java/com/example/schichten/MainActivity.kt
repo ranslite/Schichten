@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         var tag:Int = sdfTag.format(datum).toInt()
         var wochenTag:Int = kal[Calendar.DAY_OF_WEEK]
 
-        cvKalender?.setOnDateChangeListener { view, year, month, dayOfMonth  ->
+        cvKalender?.setOnDateChangeListener { _, year, month, dayOfMonth  ->
             jahr = year
             monat = month
             tag = dayOfMonth
@@ -59,6 +59,100 @@ class MainActivity : AppCompatActivity() {
             //Termintitel an das Intent übergeben
             ev.putExtra(CalendarContract.Events.TITLE, titel)
 
+            //Umbau Stellwerk -> Schicht -> Flatho
+            when (rbStellwerk.text as String){
+                //Abschnitt Linsburg
+                "Linsburg" -> {
+                    when (rbSchicht.text as String){
+                        "Früh" -> {
+                            //Abfrage Linsburg Montag(wochenTag==2) Früh Flatho
+                            if (wochenTag == 2){
+                                kal.set(jahr, monat, tag, 6, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 14, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+                            }
+                            else {
+                                //Beginn der normalen Frühschicht
+                                kal.set(jahr, monat, tag, 6, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+                            }
+                        }
+                        "Spät" -> {
+                            //Abfrage Flatho ablösen
+                            if (wochenTag == 2){
+                                kal.set(jahr, monat, tag, 14, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 20, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+                            }
+                            else {
+                                //Beginn der normalen Spätschicht
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 20, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+                            }
+                        }
+                        "Nacht" -> {
+
+                            kal.set(jahr, monat, tag, 20, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Früh/Nacht" -> {
+
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Langer Tag" -> {
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag, 18, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Lange Nacht" -> {
+                            kal.set(jahr, monat, tag, 18, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+
+/*
+//##################################Alter Quelltext######################################
             //Dörverden extra für andere Zeiten
             if (rbStellwerk.text as String == "Dörverden"){
                 when(rbSchicht.text as String) {
@@ -149,6 +243,7 @@ class MainActivity : AppCompatActivity() {
                 //Schichtbegin und -ende anhand der ausgewählten Schicht ermitteln
                 when (rbSchicht.text as String) {
                     "Früh" -> {
+
 
                         //Heinrich Flato Schicht für Linsburg
                         if (wochenTag == 2 && rbStellwerk.text as String == "Linsburg"){
@@ -273,7 +368,7 @@ class MainActivity : AppCompatActivity() {
 
                     else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
                 }
-            }
+            }*/
         }
     }
 }
