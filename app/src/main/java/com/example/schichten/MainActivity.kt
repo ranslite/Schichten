@@ -149,6 +149,72 @@ class MainActivity : AppCompatActivity() {
                         else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
                     }
                 }
+
+                //Abschnitt Nienburg
+                "Nienburg" -> {
+                    when (rbSchicht.text as String){
+                        "Früh" -> {
+                                kal.set(jahr, monat, tag, 6, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+
+                        }
+                        "Spät" -> {
+
+                                kal.set(jahr, monat, tag, 12, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                                kal.set(jahr, monat, tag, 20, 30)
+                                ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                                startActivity(ev)
+
+                        }
+                        "Nacht" -> {
+
+                            kal.set(jahr, monat, tag, 20, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Früh/Nacht" -> {
+
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Langer Tag" -> {
+                            kal.set(jahr, monat, tag, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag, 18, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        "Lange Nacht" -> {
+                            kal.set(jahr, monat, tag, 18, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, kal.time.time)
+
+                            kal.set(jahr, monat, tag + 1, 6, 30)
+                            ev.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, kal.time.time)
+
+                            startActivity(ev)
+                        }
+                        else -> Toast.makeText(this, "Irgendwas ging schief", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
 
 /*

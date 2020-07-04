@@ -10,7 +10,8 @@
     <CalendarView
         android:id="@+id/cvKalender"
         android:layout_width="match_parent"
-        android:layout_height="299dp" />
+        android:layout_height="315dp"
+        android:firstDayOfWeek="2" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,6 +89,14 @@
                 android:textSize="20sp" />
 
             <RadioButton
+                android:id="@+id/rbNienburg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nienburg"
+                android:layout_margin="2dp"
+                android:textSize="20sp"/>
+
+            <RadioButton
                 android:id="@+id/rbRohrsen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,6 +118,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:text="Dörverden"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/rbVerden"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="Verden"
                 android:textSize="20sp" />
         </RadioGroup>
     </LinearLayout>
