@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:checked="true"
-                android:text="Früh"
+                android:text="@string/frueh"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Spät"
+                android:text="@string/spaet"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Nacht"
+                android:text="@string/nacht"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Früh/Nacht"
+                android:text="@string/frueh_nacht"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Langer Tag"
+                android:text="@string/langer_tag"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Lange Nacht"
+                android:text="@string/lange_nacht"
                 android:textSize="20sp" />
 
         </RadioGroup>
@@ -85,14 +85,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:checked="true"
-                android:text="Linsburg"
+                android:text="@string/linsburg"
                 android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/rbNienburg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nienburg"
+                android:text="@string/nienburg"
                 android:layout_margin="2dp"
                 android:textSize="20sp"/>
 
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Rohrsen"
+                android:text="@string/rohrsen"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Eystrup"
+                android:text="@string/eystrup"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -117,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Dörverden"
+                android:text="@string/d_rverden"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:text="Verden"
+                android:text="@string/verden"
                 android:textSize="20sp" />
         </RadioGroup>
     </LinearLayout>
@@ -135,7 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="Eintragen"
+        android:text="@string/eintragen"
         android:textAllCaps="false"
         android:textSize="24sp" />
 
